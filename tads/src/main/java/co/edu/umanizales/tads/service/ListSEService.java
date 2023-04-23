@@ -1,5 +1,6 @@
 package co.edu.umanizales.tads.service;
 
+import co.edu.umanizales.tads.controller.dto.InformDTO;
 import co.edu.umanizales.tads.controller.dto.LocationDTO;
 import co.edu.umanizales.tads.model.Location;
 import co.edu.umanizales.tads.model.Kid;
@@ -74,6 +75,7 @@ public class ListSEService {
     public void invert(){
         kids.invert();
     }
+
 
 }
 

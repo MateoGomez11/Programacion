@@ -105,7 +105,6 @@ public class SaleService {
         for(Sale sale: sales){
             int quant = getTotalSalesBySeller(sale.getSeller().getCode());
             if(num<quant){
-
             BestSellerDTO bestSellerDTO = new BestSellerDTO(sale.getSeller(),quant);
                 if(!bestSellerDTOList.contains(bestSellerDTO)){
                     bestSellerDTOList.add(bestSellerDTO);

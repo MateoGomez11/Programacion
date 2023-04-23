@@ -1,6 +1,11 @@
 package co.edu.umanizales.tads.model;
 
+import co.edu.umanizales.tads.controller.dto.GenderDTO;
+import co.edu.umanizales.tads.controller.dto.InformDTO;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ListSE {
@@ -46,27 +51,27 @@ public class ListSE {
         }
         size++;
     }
-    public void invert(){
-        if(this.head !=null){
+
+    public void invert() {
+        if (this.head != null) {
             ListSE listCp = new ListSE();
             Node temp = this.head;
-            while(temp != null){
+            while (temp != null) {
                 listCp.addToStart(temp.getData());
                 temp = temp.getNext();
             }
             this.head = listCp.getHead();
         }
     }
-    public void orderBoysToStart(){
-        if(this.head !=null){
+
+    public void orderBoysToStart() {
+        if (this.head != null) {
             ListSE listCp = new ListSE();
             Node temp = this.head;
-            while(temp != null){
-                if(temp.getData().getGender()=='M')
-                {
+            while (temp != null) {
+                if (temp.getData().getGender() == 'M') {
                     listCp.addToStart(temp.getData());
-                }
-                else{
+                } else {
                     listCp.add(temp.getData());
                 }
 
@@ -76,12 +81,10 @@ public class ListSE {
         }
     }
 
-    public void changeExtremes(){
-        if(this.head !=null && this.head.getNext() !=null)
-        {
+    public void changeExtremes() {
+        if (this.head != null && this.head.getNext() != null) {
             Node temp = this.head;
-            while(temp.getNext()!=null)
-            {
+            while (temp.getNext() != null) {
                 temp = temp.getNext();
             }
             //temp está en el último
@@ -147,6 +150,48 @@ public class ListSE {
         return (cont / (float) getTotalKids());
     }
 
+
+    public List<InformDTO> geKidsByLocationAndAgeCode(int code) {
+        List<InformDTO> informDTOList = new ArrayList<>();
+        if (this.head != null) {
+            Node temp = this.head;
+            while (temp != null) {
+                if (temp.getData().getAge() > code) {
+                    Location location = temp.getData().getLocation();
+                    boolean found = false;
+                    for (InformDTO informDTO : informDTOList) {
+                        if (informDTO.getLocation().equals(location)) {
+                            informDTO.setTotal(informDTO.getTotal() + 1);
+                            List<GenderDTO> genders = informDTO.getGenders();
+                            for (GenderDTO genderDTO : genders) {
+                                if (genderDTO.getGender() == temp.getData().getGender()) {
+                                    genderDTO.setQuantity(genderDTO.getQuantity() + 1);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                GenderDTO genderDTO = new GenderDTO(temp.getData().getGender(), 1);
+                                genders.add(genderDTO);
+                            }
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        List<GenderDTO> genders = new ArrayList<>();
+                        GenderDTO genderDTO = new GenderDTO(temp.getData().getGender(), 1);
+                        genders.add(genderDTO);
+                        InformDTO informDTO = new InformDTO(location, genders, 1);
+                        informDTOList.add(informDTO);
+                    }
+                }
+                temp = temp.getNext();
+            }
+        }
+        return informDTOList;
+    }
+
     public int getTotalKidsByLocationCode(String code) {
         int count = 0;
         if (this.head != null) {
@@ -188,8 +233,6 @@ public class ListSE {
         }
         return count;
     }
-
-
 
 
 }

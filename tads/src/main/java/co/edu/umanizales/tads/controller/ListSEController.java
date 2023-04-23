@@ -1,5 +1,6 @@
 package co.edu.umanizales.tads.controller;
 
+import co.edu.umanizales.tads.controller.dto.InformDTO;
 import co.edu.umanizales.tads.controller.dto.KidDTO;
 import co.edu.umanizales.tads.controller.dto.LocationDTO;
 import co.edu.umanizales.tads.controller.dto.ResponseDTO;
@@ -71,6 +72,7 @@ public class ListSEController {
         }
         return new ResponseEntity<>(new ResponseDTO(200,LocationDTOList, null), HttpStatus.OK);
     }
+
     @GetMapping(path = "/kidsbydepartment")
     public ResponseEntity<ResponseDTO> getKidsByDepartment(){
         List<LocationDTO> LocationDTOList = new ArrayList<>();
@@ -94,9 +96,12 @@ public class ListSEController {
         return new ResponseEntity<>(new ResponseDTO(200,LocationDTOList, null), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/kidsbycountryandgender/{code}")
+    public ResponseEntity<ResponseDTO> getKidsByCountryAndGender(@PathVariable int code){
+        return new ResponseEntity<>(new ResponseDTO(200,listSEService.getKids().geKidsByLocationAndAgeCode(code),null),HttpStatus.OK);
+    }
 
-
-    @GetMapping(path = "/averageKidsAge")
+    @GetMapping(path = "/averagekidsage")
     public ResponseEntity<ResponseDTO>getAverageKidsAge(){
 
         return new ResponseEntity<>(new ResponseDTO(200,listSEService.averageKidsByAge(),null),HttpStatus.OK);
