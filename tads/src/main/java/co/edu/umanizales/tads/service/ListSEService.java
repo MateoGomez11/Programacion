@@ -1,17 +1,8 @@
 package co.edu.umanizales.tads.service;
 
-import co.edu.umanizales.tads.controller.dto.InformDTO;
-import co.edu.umanizales.tads.controller.dto.LocationDTO;
-import co.edu.umanizales.tads.model.Location;
-import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.ListSE;
-import co.edu.umanizales.tads.model.Node;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Data
