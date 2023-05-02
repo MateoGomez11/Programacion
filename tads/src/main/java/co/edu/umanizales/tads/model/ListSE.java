@@ -160,7 +160,6 @@ public class ListSE {
             }
             this.head = listCp.getHead();
         }
-
     }
 
     public void deleteByAge(int age) {
