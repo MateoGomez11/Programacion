@@ -1,14 +1,19 @@
 package co.edu.umanizales.tads.model;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+
 
 @Data
 @AllArgsConstructor
 public class Kid {
     private String identification;
     private String name;
+
     private byte age;
-    private char gender;
+    private String gender;
     private Location location;
 }

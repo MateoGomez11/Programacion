@@ -110,7 +110,7 @@ public class ListSE {
             ListSE listCp = new ListSE();
             Node temp = this.head;
             while (temp != null) {
-                if (temp.getData().getGender() == 'M') {
+                if (temp.getData().getGender().equals("M")) {
                     listCp.addToStart(temp.getData());
                 } else {
                     listCp.add(temp.getData());
@@ -129,7 +129,7 @@ public class ListSE {
             ListSE listGirls = new ListSE();
             Node temp = this.head;
             while (temp != null) {
-                if (temp.getData().getGender() == 'F') {
+                if (temp.getData().getGender() .equals("F")) {
                     if (listGirls.getHead() == null) {
                         listGirls.addToStart(temp.getData());
                     } else {
@@ -137,7 +137,7 @@ public class ListSE {
                     }
 
                 }
-                if (temp.getData().getGender() == 'M') {
+                if (temp.getData().getGender().equals("M")) {
                     if (listBoys.getHead() == null) {
                         listBoys.addToStart(temp.getData());
                     } else {

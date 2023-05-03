@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class GenderDTO {
-    private char gender;
+    private String gender;
     private int quantity;
 }

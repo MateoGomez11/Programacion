@@ -1,20 +1,24 @@
 package co.edu.umanizales.tads.controller;
 
-import co.edu.umanizales.tads.controller.dto.KidDTO;
-import co.edu.umanizales.tads.controller.dto.LocationDTO;
-import co.edu.umanizales.tads.controller.dto.ReportKidsLocationGenderDTO;
-import co.edu.umanizales.tads.controller.dto.ResponseDTO;
+import co.edu.umanizales.tads.controller.dto.*;
 import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.Location;
 import co.edu.umanizales.tads.service.ListSEService;
 import co.edu.umanizales.tads.service.LocationService;
+import jakarta.validation.Valid;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/listse")
@@ -24,9 +28,22 @@ public class ListSEController {
     @Autowired
     private LocationService locationService;
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
+
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> addKid(@RequestBody KidDTO kidDTO){
+    public ResponseEntity<ResponseDTO> addKid(@Valid @RequestBody KidDTO kidDTO){
         Location location = locationService.getLocationByCode(kidDTO.getCodeLocation());
         boolean identification = listSEService.getKids().searchKidIdentification(kidDTO.getIdentification());
         if(location == null){
@@ -38,6 +55,7 @@ public class ListSEController {
                         kidDTO.getGender(), location));
         return new ResponseEntity<>(new ResponseDTO(200,"Se ha adicionado el niño", null), HttpStatus.OK);
     }
+
 
     @GetMapping
     public ResponseEntity<ResponseDTO> getKids(){
