@@ -24,11 +24,6 @@ public class ListDE {
         return pets;
     }
 
-
-
-
-
-
     public void add(Pet pet){
         NodeDE newNodeDE = new NodeDE(pet);
         if(head != null){
@@ -109,7 +104,7 @@ public class ListDE {
             ListDE listCp = new ListDE();
             NodeDE temp = this.head;
             while (temp != null) {
-                if (temp.getData().getGender() == 'M') {
+                if (temp.getData().getGender().equals("M")) {
                     listCp.addToStart(temp.getData());
                 } else {
                     listCp.add(temp.getData());
@@ -127,7 +122,7 @@ public class ListDE {
             ListDE listGirls = new ListDE();
             NodeDE temp = this.head;
             while (temp != null) {
-                if (temp.getData().getGender() == 'F') {
+                if (temp.getData().getGender().equals("F")) {
                     if (listGirls.getHead() == null) {
                         listGirls.addToStart(temp.getData());
                     } else {
@@ -135,7 +130,7 @@ public class ListDE {
                     }
 
                 }
-                if (temp.getData().getGender() == 'M') {
+                if (temp.getData().getGender().equals("M")) {
                     if (listBoys.getHead() == null) {
                         listBoys.addToStart(temp.getData());
                     } else {

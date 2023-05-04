@@ -2,6 +2,7 @@ package co.edu.umanizales.tads.model;
 
 import co.edu.umanizales.tads.controller.dto.AgeDTO;
 import co.edu.umanizales.tads.controller.dto.ReportKidsLocationGenderDTO;
+import co.edu.umanizales.tads.exceptions.ListSEException;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -12,12 +13,20 @@ public class ListSE {
     private Node head;
     private int size;
 
-    public void add(Kid kid) {
+    public void add(Kid kid) throws ListSEException {
         if (head != null) {
             Node temp = head;
             while (temp.getNext() != null) {
+                if (temp.getData().getIdentification().equals(kid.getIdentification())) {
+                    throw new ListSEException("Ya existe un niño");
+                }
                 temp = temp.getNext();
+
             }
+            if (temp.getData().getIdentification().equals(kid.getIdentification())) {
+                throw new ListSEException("Ya existe un niño");
+            }
+            /// Parado en el último
             Node newNode = new Node(kid);
             temp.setNext(newNode);
         } else {
@@ -26,6 +35,8 @@ public class ListSE {
         size++;
     }
 
+
+/*
     public boolean searchKidIdentification(String id) {
         boolean kidFound = false;
         if (head != null) {
@@ -40,6 +51,8 @@ public class ListSE {
         }
         return kidFound;
     }
+
+ */
 
     public void addToStart(Kid kid) {
         if (head != null) {
@@ -105,7 +118,7 @@ public class ListSE {
         }
     }
 
-    public void orderBoysToStart() {
+    public void orderBoysToStart() throws ListSEException {
         if (this.head != null) {
             ListSE listCp = new ListSE();
             Node temp = this.head;
@@ -122,14 +135,14 @@ public class ListSE {
         }
     }
 
-    public void alternateBoysAndGirls() {
+    public void alternateBoysAndGirls() throws ListSEException {
         if (this.head != null) {
             ListSE listCp = new ListSE();
             ListSE listBoys = new ListSE();
             ListSE listGirls = new ListSE();
             Node temp = this.head;
             while (temp != null) {
-                if (temp.getData().getGender() .equals("F")) {
+                if (temp.getData().getGender().equals("F")) {
                     if (listGirls.getHead() == null) {
                         listGirls.addToStart(temp.getData());
                     } else {
@@ -298,32 +311,31 @@ public class ListSE {
         return ageDTOList;
     }
 
-    public void addLastByName(char initial) {
+    public void addLastByName(char initial) throws ListSEException{
         ListSE listCp = new ListSE();
         Node temp = this.head;
         while (temp.getNext() != null) {
             if (this.head != null) {
                 if (this.head.getData().getName().charAt(0) == initial) {
-                    if(listCp.getHead() != null){
+                    if (listCp.getHead() != null) {
                         listCp.add(temp.getData());
-                    }else {
+                    } else {
                         listCp.addToStart(this.head.getData());
                     }
-                    head= head.getNext();
-                }
-                else
+                    head = head.getNext();
+                } else
                     while (temp.getNext().getData().getName().charAt(0) == initial) {
-                    if (listCp.getHead() != null) {
-                        if(temp.getNext().getNext() != null){
-                            listCp.add(temp.getNext().getData());
+                        if (listCp.getHead() != null) {
+                            if (temp.getNext().getNext() != null) {
+                                listCp.add(temp.getNext().getData());
+                                temp.setNext(temp.getNext().getNext());
+                            }
+                            break;
+                        } else {
+                            listCp.addToStart(temp.getNext().getData());
                             temp.setNext(temp.getNext().getNext());
                         }
-                        break;
-                    } else {
-                        listCp.addToStart(temp.getNext().getData());
-                        temp.setNext(temp.getNext().getNext());
                     }
-                }
             }
             temp = temp.getNext();
         }

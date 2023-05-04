@@ -1,6 +1,7 @@
 package co.edu.umanizales.tads.controller;
 
 import co.edu.umanizales.tads.controller.dto.*;
+import co.edu.umanizales.tads.exceptions.ListSEException;
 import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.Location;
 import co.edu.umanizales.tads.service.ListSEService;
@@ -45,15 +46,15 @@ public class ListSEController {
     @PostMapping
     public ResponseEntity<ResponseDTO> addKid(@Valid @RequestBody KidDTO kidDTO){
         Location location = locationService.getLocationByCode(kidDTO.getCodeLocation());
-        boolean identification = listSEService.getKids().searchKidIdentification(kidDTO.getIdentification());
         if(location == null){
             return new ResponseEntity<>(new ResponseDTO(404,"La ubicación no existe", null), HttpStatus.OK);
-        }else if(identification == true){
-            return new ResponseEntity<>(new ResponseDTO(404,"El Id ya se encuentra registrado", null), HttpStatus.OK);
         }
-        listSEService.getKids().add(new Kid(kidDTO.getIdentification(), kidDTO.getName(), kidDTO.getAge(),
-                        kidDTO.getGender(), location));
-        return new ResponseEntity<>(new ResponseDTO(200,"Se ha adicionado el niño", null), HttpStatus.OK);
+        try {
+            listSEService.getKids().add(new Kid(kidDTO.getIdentification(), kidDTO.getName(), kidDTO.getAge(), kidDTO.getGender(), location));
+        } catch (ListSEException e) {
+            return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponseDTO(200,"Se ha adicionado el Kid", null), HttpStatus.OK);
     }
 
 
@@ -80,14 +81,22 @@ public class ListSEController {
 
     @GetMapping(path = "/orderboystostart")
     public ResponseEntity<ResponseDTO> orderBoysStart() {
-        listSEService.getKids().orderBoysToStart();
+        try {
+            listSEService.getKids().orderBoysToStart();
+        } catch (ListSEException e) {
+            return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
+        }
         return new ResponseEntity<>(new ResponseDTO(
                 200, "Se ha ordenado los niños al inicio",
                 null), HttpStatus.OK);
     }
     @GetMapping(path = "/alternateboysandgirls")
     public ResponseEntity<ResponseDTO> alternateBoysAndGirls() {
-        listSEService.getKids().alternateBoysAndGirls();
+        try {
+            listSEService.getKids().alternateBoysAndGirls();
+        } catch (ListSEException e) {
+            return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
+        }
         return new ResponseEntity<>(new ResponseDTO(
                 200, "Se ha alternado los niños y las niñas",
                 null), HttpStatus.OK);
@@ -138,7 +147,12 @@ public class ListSEController {
     }
     @GetMapping(path = "/addlastbyname/{initial}")
     public ResponseEntity<ResponseDTO> addLasByName(@PathVariable char initial) {
-        listSEService.getKids().addLastByName(initial);
+        try {
+            listSEService.getKids().addLastByName(initial);
+        } catch (ListSEException e) {
+            return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
+        }
+
         return new ResponseEntity<>(new ResponseDTO(200,"Se han agregado al final", null), HttpStatus.OK);
     }
 
