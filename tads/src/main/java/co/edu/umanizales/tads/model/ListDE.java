@@ -1,6 +1,8 @@
 package co.edu.umanizales.tads.model;
 
 import co.edu.umanizales.tads.controller.dto.AgeDTO;
+import co.edu.umanizales.tads.exceptions.ListDEException;
+import co.edu.umanizales.tads.exceptions.ListSEException;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -24,12 +26,17 @@ public class ListDE {
         return pets;
     }
 
-    public void add(Pet pet){
+    public void add(Pet pet) throws ListDEException {
         NodeDE newNodeDE = new NodeDE(pet);
         if(head != null){
             NodeDE temp = head;
             while (temp.getNext() != null){
+                if (temp.getData().getIdentification().equals(pet.getIdentification())) {
+                    throw new ListDEException("Ya existe un pet");
+                }
                 temp = temp.getNext();
+            }if (temp.getData().getIdentification().equals(pet.getIdentification())) {
+                throw new ListDEException("Ya existe un niño");
             }
             temp.setNext(newNodeDE);
             newNodeDE.setPrevious(temp);
@@ -37,6 +44,23 @@ public class ListDE {
             head = new NodeDE(pet);
         }
         size ++;
+    }
+    public void removeById(String id) {
+        if (head != null) {
+            NodeDE temp = head;
+
+            if (head.getData().getIdentification().equals(id)) {
+                head = head.getNext();
+                head.setPrevious(null);
+            } else {
+                while (!temp.getNext().getData().getIdentification().equals(id)) {
+                    temp = temp.getNext();
+                }
+                temp.getNext().getNext().setPrevious(temp);
+                temp.setNext(temp.getNext().getNext());
+
+            }
+        }
     }
 
     public void addToStart(Pet pet){
@@ -48,6 +72,7 @@ public class ListDE {
         }
         else{
             head = new NodeDE(pet);
+            head.setPrevious(null);
         }
         size ++;
     }
@@ -99,7 +124,7 @@ public class ListDE {
         }
     }
 
-    public void orderBoysToStart() {
+    public void orderBoysToStart() throws ListDEException {
         if (this.head != null) {
             ListDE listCp = new ListDE();
             NodeDE temp = this.head;
@@ -115,7 +140,7 @@ public class ListDE {
             this.head = listCp.getHead();
         }
     }
-    public void alternateBoysAndGirls() {
+    public void alternateBoysAndGirls() throws ListDEException {
         if (this.head != null) {
             ListDE listCp = new ListDE();
             ListDE listBoys = new ListDE();
@@ -288,7 +313,7 @@ public class ListDE {
         return ageDTOList;
     }
 
-    public void addLastByName(char initial) {
+    public void addLastByName(char initial) throws ListDEException{
         ListDE listCp = new ListDE();
         NodeDE temp = this.head;
         while (temp.getNext() != null) {

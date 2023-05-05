@@ -4,6 +4,9 @@ import co.edu.umanizales.tads.controller.dto.KidDTO;
 import co.edu.umanizales.tads.controller.dto.LocationDTO;
 import co.edu.umanizales.tads.controller.dto.PetDTO;
 import co.edu.umanizales.tads.controller.dto.ResponseDTO;
+import co.edu.umanizales.tads.exceptions.ListDEException;
+import co.edu.umanizales.tads.exceptions.ListSEException;
+import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.ListSE;
 import co.edu.umanizales.tads.model.Location;
 import co.edu.umanizales.tads.model.Pet;
@@ -51,15 +54,13 @@ public class ListDEController {
     @PostMapping
     public ResponseEntity<ResponseDTO> addPet(@Valid @RequestBody PetDTO petDTO) {
         Location location = locationService.getLocationByCode(petDTO.getCodeLocation());
-        boolean identification = listDEService.getPets().searchPetIdentification((petDTO.getIdentification()));
         if (location == null) {
             return new ResponseEntity<>(new ResponseDTO(404, "La ubicación no existe", null), HttpStatus.OK);
-        } else if (identification == true) {
-            return new ResponseEntity<>(new ResponseDTO(404, "El Id ya se encuentra registrado", null), HttpStatus.OK);
+        } try {
+            listDEService.getPets().add(new Pet(petDTO.getIdentification(), petDTO.getName(), petDTO.getAge(), petDTO.getGender(), location));
+        } catch (ListDEException e) {
+            return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
         }
-
-        listDEService.getPets().add(new Pet(petDTO.getIdentification(), petDTO.getName(), petDTO.getAge(),
-                petDTO.getGender(), location));
         return new ResponseEntity<>(new ResponseDTO(200, "Se ha adicionado el niño", null), HttpStatus.OK);
     }
 
@@ -71,13 +72,21 @@ public class ListDEController {
 
     @GetMapping(path = "/orderboystostart")
     public ResponseEntity<ResponseDTO> orderBoysStart() {
-        listDEService.getPets().orderBoysToStart();
+        try {
+            listDEService.getPets().orderBoysToStart();
+        } catch (ListDEException e) {
+            return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
+        }
         return new ResponseEntity<>(new ResponseDTO(200, "Se ha ordenado los niños al inicio", null), HttpStatus.OK);
     }
 
     @GetMapping(path = "/alternateboysandgirls")
     public ResponseEntity<ResponseDTO> alternateBoysAndGirls() {
-        listDEService.getPets().alternateBoysAndGirls();
+        try {
+            listDEService.getPets().alternateBoysAndGirls();
+        } catch (ListDEException e) {
+            return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
+        }
         return new ResponseEntity<>(new ResponseDTO(
                 200, "Se ha alternado los niños y las niñas",
                 null), HttpStatus.OK);
@@ -127,7 +136,11 @@ public class ListDEController {
 
     @GetMapping(path = "/addlastbyname/{initial}")
     public ResponseEntity<ResponseDTO> addLasByName(@PathVariable char initial) {
-        listDEService.getPets().addLastByName(initial);
+        try {
+            listDEService.getPets().addLastByName(initial);
+        } catch (ListDEException e) {
+            return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
+        }
         return new ResponseEntity<>(new ResponseDTO(200,"Se han agregado al final", null), HttpStatus.OK);
     }
 

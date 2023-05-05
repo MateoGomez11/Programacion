@@ -96,6 +96,7 @@ public class ListSE {
         }
     }
 
+    /*
     public int getTotalKids() {
         int cont = 1;
         Node temp = head;
@@ -105,6 +106,8 @@ public class ListSE {
         }
         return cont;
     }
+
+     */
 
     public void invert() {
         if (this.head != null) {
@@ -211,14 +214,13 @@ public class ListSE {
         int cont = 0;
         int cont2 = 0;
         Node temp = head;
-        int totalKids = getTotalKids();
-        while (totalKids > cont2) {
+        while (size > cont2) {
             int ages = temp.getData().getAge();
             cont = cont + ages;
             temp = temp.getNext();
             cont2++;
         }
-        return (cont / (float) getTotalKids());
+        return (cont / (float) size);
     }
 
     public void passPositions(String id, int pos) {
