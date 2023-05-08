@@ -51,6 +51,8 @@ public class ListDEController {
         return new ResponseEntity<>(new ResponseDTO(200, listDEService.getPets().getPets(), null), HttpStatus.OK);
     }
 
+
+
     @PostMapping
     public ResponseEntity<ResponseDTO> addPet(@Valid @RequestBody PetDTO petDTO) {
         Location location = locationService.getLocationByCode(petDTO.getCodeLocation());
@@ -142,6 +144,12 @@ public class ListDEController {
             return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
         }
         return new ResponseEntity<>(new ResponseDTO(200,"Se han agregado al final", null), HttpStatus.OK);
+    }
+
+    @GetMapping("/removebyid/{id}")
+    public ResponseEntity<ResponseDTO> removeByID(@PathVariable String id) {
+        listDEService.getPets().removeById(id);
+        return new ResponseEntity<>(new ResponseDTO(200, "Se ha eliminado el pet", null), HttpStatus.OK);
     }
 
 

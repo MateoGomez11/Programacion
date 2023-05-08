@@ -14,11 +14,11 @@ public class ListDE {
     private int size;
 
 
-    public List<Pet> getPets(){
+    public List<Pet> getPets() {
         List<Pet> pets = new ArrayList<>();
         NodeDE temp = head;
-        if (head != null){
-            while(temp != null){
+        if (head != null) {
+            while (temp != null) {
                 pets.add(temp.getData());
                 temp = temp.getNext();
             }
@@ -26,16 +26,62 @@ public class ListDE {
         return pets;
     }
 
+    /*
+    Remover por ID:
+    Si la cabeza esta vacia:
+    (SI ESTA EN LA CABEZA)
+    temporal coger la siguiente cabeza y estblecerla como la cabeza, cambiar el previous de la nueva cabeza por null.
+
+
+    (SI ESTA EN EL MEDIO)
+    Agarrar la cabeza del temporal
+    Recorrer la lista y que temporal coja al niño en la misma posicion en la que esta el niño.
+    Temporal debe establecer el temp.getnext.set previous(es decir el nodo anterior del siguiente)temp.getprevious(Es decir el nodo anterior de donde esta parado el temp)
+    ahora el getnext.set previous(es decir del nodo siguiente el anterior) debe ponerse el anterior a donde esta parado temp (temp.getprevious)
+    De esta forma se estaria eliminando de el nodo anterior el next, al siguiente del niño a eliminar y el previous del siguiente niño al anterior de donde esta el temp
+
+     (SI ESTA AL FINAL)
+     Preguntar si el siguiente es nulo, asi podremos saber si no se puede agregar de ultimo
+     Definir el previous del anterior con un nulo, ya que estamos al final
+
+     */
+    public void removeById(String id) {
+        if (this.head != null) {
+            if (head.getData().getIdentification().equals(id)) {
+                head = head.getNext();
+                if (head != null) {
+                    head.setPrevious(null);
+                }
+            } else {
+                NodeDE temp = this.head;
+                while (temp != null) {
+                    if (temp.getData().getIdentification().equals(id)) {
+                        if (temp.getNext() == null) {
+                            temp.getPrevious().setNext(null);
+                        } else {
+                            temp.getPrevious().setNext(temp.getNext());
+                            temp.getNext().setPrevious(temp.getPrevious());
+                        }
+                        return;
+                    }
+                    temp = temp.getNext();
+                }
+            }
+        }
+    }
+
+
     public void add(Pet pet) throws ListDEException {
         NodeDE newNodeDE = new NodeDE(pet);
-        if(head != null){
+        if (head != null) {
             NodeDE temp = head;
-            while (temp.getNext() != null){
+            while (temp.getNext() != null) {
                 if (temp.getData().getIdentification().equals(pet.getIdentification())) {
                     throw new ListDEException("Ya existe un pet");
                 }
                 temp = temp.getNext();
-            }if (temp.getData().getIdentification().equals(pet.getIdentification())) {
+            }
+            if (temp.getData().getIdentification().equals(pet.getIdentification())) {
                 throw new ListDEException("Ya existe un niño");
             }
             temp.setNext(newNodeDE);
@@ -43,39 +89,23 @@ public class ListDE {
         } else {
             head = new NodeDE(pet);
         }
-        size ++;
-    }
-    public void removeById(String id) {
-        if (head != null) {
-            NodeDE temp = head;
-
-            if (head.getData().getIdentification().equals(id)) {
-                head = head.getNext();
-                head.setPrevious(null);
-            } else {
-                while (!temp.getNext().getData().getIdentification().equals(id)) {
-                    temp = temp.getNext();
-                }
-                temp.getNext().getNext().setPrevious(temp);
-                temp.setNext(temp.getNext().getNext());
-
-            }
-        }
+        size++;
     }
 
-    public void addToStart(Pet pet){
+
+    public void addToStart(Pet pet) {
         NodeDE newNodeDE = new NodeDE(pet);
-        if(head != null){
+        if (head != null) {
             head.setPrevious(newNodeDE);
             newNodeDE.setNext(head);
             head = newNodeDE;
-        }
-        else{
+        } else {
             head = new NodeDE(pet);
             head.setPrevious(null);
         }
-        size ++;
+        size++;
     }
+
     public boolean searchPetIdentification(String id) {
         boolean petFound = false;
         if (head != null) {
@@ -140,6 +170,7 @@ public class ListDE {
             this.head = listCp.getHead();
         }
     }
+
     public void alternateBoysAndGirls() throws ListDEException {
         if (this.head != null) {
             ListDE listCp = new ListDE();
@@ -179,6 +210,7 @@ public class ListDE {
             this.head = listCp.getHead();
         }
     }
+
     public void deleteByAge(int age) {
         while (head != null && head.getData().getAge() == age) {
             head = head.getNext();
@@ -197,6 +229,7 @@ public class ListDE {
             }
         }
     }
+
     public int getTotalPets() {
         int cont = 1;
         NodeDE temp = head;
@@ -234,6 +267,7 @@ public class ListDE {
         }
         return count;
     }
+
     public void passPositions(String id, int pos) {
         ListDE listCp = new ListDE();
         NodeDE temp = this.head;
@@ -313,23 +347,22 @@ public class ListDE {
         return ageDTOList;
     }
 
-    public void addLastByName(char initial) throws ListDEException{
+    public void addLastByName(char initial) throws ListDEException {
         ListDE listCp = new ListDE();
         NodeDE temp = this.head;
         while (temp.getNext() != null) {
             if (this.head != null) {
                 if (this.head.getData().getName().charAt(0) == initial) {
-                    if(listCp.getHead() != null){
+                    if (listCp.getHead() != null) {
                         listCp.add(temp.getData());
-                    }else {
+                    } else {
                         listCp.addToStart(this.head.getData());
                     }
-                    head= head.getNext();
-                }
-                else
+                    head = head.getNext();
+                } else
                     while (temp.getNext().getData().getName().charAt(0) == initial) {
                         if (listCp.getHead() != null) {
-                            if(temp.getNext().getNext() != null){
+                            if (temp.getNext().getNext() != null) {
                                 listCp.add(temp.getNext().getData());
                                 temp.getNext().getNext().setPrevious(temp);
                                 temp.setNext(temp.getNext().getNext());
@@ -350,7 +383,6 @@ public class ListDE {
             temp2 = temp2.getNext();
         }
     }
-
 
 
 }
