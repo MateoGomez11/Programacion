@@ -32,7 +32,7 @@ public class ListDEController {
     private ListDEService listDEService;
     @Autowired
     private LocationService locationService;
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
@@ -47,7 +47,6 @@ public class ListDEController {
 
     @GetMapping
     public ResponseEntity<ResponseDTO> getPets() {
-
         return new ResponseEntity<>(new ResponseDTO(200, listDEService.getPets().getPets(), null), HttpStatus.OK);
     }
 
@@ -59,7 +58,7 @@ public class ListDEController {
         if (location == null) {
             return new ResponseEntity<>(new ResponseDTO(404, "La ubicación no existe", null), HttpStatus.OK);
         } try {
-            listDEService.getPets().add(new Pet(petDTO.getIdentification(), petDTO.getName(), petDTO.getAge(), petDTO.getGender(), location));
+            listDEService.getPets().add(new Pet(petDTO.getIdentification(), petDTO.getName(), petDTO.getAge(), petDTO.getGender(), location,false));
         } catch (ListDEException e) {
             return new ResponseEntity<>(new ResponseDTO(409,e.getMessage(), null), HttpStatus.OK);
         }

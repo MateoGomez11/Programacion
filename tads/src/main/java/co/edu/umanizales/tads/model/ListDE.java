@@ -82,7 +82,7 @@ public class ListDE {
                 temp = temp.getNext();
             }
             if (temp.getData().getIdentification().equals(pet.getIdentification())) {
-                throw new ListDEException("Ya existe un niño");
+                throw new ListDEException("Ya existe un pet");
             }
             temp.setNext(newNodeDE);
             newNodeDE.setPrevious(temp);
